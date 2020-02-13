@@ -12,7 +12,7 @@ public class App {
                         .title("My internal DSL")
                     .body()
                         .div().clazz("container").id("my-specific-container")
-                        .p().text("Some internal dsl content")
+                        .p().clazz("my-content").text("Some internal dsl content")
                     .build();
 
         document.printElements();

@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class HTMLDocument {
 
@@ -12,8 +13,8 @@ public class HTMLDocument {
     private Element currentElement;
     private Element previousElement;
     private String htmlString;
-    private ElementType[] blockedFromAttributes = new ElementType[] { ElementType.HEAD, ElementType.BODY,
-            ElementType.TITLE, };
+    private List<ElementType> blockedFromAttributes = Arrays.asList(ElementType.HEAD, ElementType.BODY,
+            ElementType.TITLE);
 
     public HTMLDocument() {
         root = new Element(ElementType.HTML);
@@ -64,25 +65,28 @@ public class HTMLDocument {
 
     // ________ ELEMENT ATTRIBUTES __________//
     public HTMLDocument id(String id) {
-        this.currentElement.setId(id);
+        if (attributesAllowed()) {
+            this.currentElement.setId(id);
+        }
         return this;
     }
 
     public HTMLDocument text(String text) {
-        //TODO: Check allowed attributes
-        boolean allowed = true;
-        if (allowed) {
+        if (attributesAllowed()) {
             this.currentElement.setText(text);
-            return this;
-        }else {
-            return this;
         }
-
+        return this;
+    }
+    
+    public HTMLDocument clazz(String className) {
+        if (attributesAllowed()) {
+            this.currentElement.setClazz(className);
+        }
+        return this;
     }
 
-    public HTMLDocument clazz(String className) {
-        this.currentElement.setClazz(className);
-        return this;
+    private boolean attributesAllowed() {
+        return !blockedFromAttributes.contains(currentElement.getType());
     }
 
     public HTMLDocument parent() {
