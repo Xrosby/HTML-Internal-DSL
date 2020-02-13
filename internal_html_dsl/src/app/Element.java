@@ -1,16 +1,23 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Element {
     private ElementType type;
+    private Element parent;
     private String clazz;
     private String id;
     private String text;
     private ArrayList<Element> children;
 
-    public Element(ElementType type) {
+    public Element(ElementType type, Element parent) {
         this.type = type;
+        this.parent = parent;
+    }
+
+    public Element getParent() {
+        return this.parent;
     }
 
     public ElementType getType() {
@@ -50,11 +57,21 @@ public class Element {
         StringBuilder localStringBuilder = new StringBuilder();
         if (node.getChildren() != null) {
             for (Element child : node.getChildren()) {
-                localStringBuilder.append(child.getElementString());
-                localStringBuilder.append(visitNodeAndAppend(child));
+                localStringBuilder.append(embed(child) + visitNodeAndAppend(child));
             }
         }
         return localStringBuilder.toString();
+    }
+
+    public String embed(Element current) {
+        String parentString = current.getParent().getElementString();
+        String childString = current.getElementString();
+        String[] outer = parentString.split("><");
+        System.out.println("\n" + Arrays.toString(outer));
+        System.out.println("\n\n");
+        String embedded = outer[0] + ">" + childString + "<" + outer[1];
+        return embedded;
+
     }
 
     public String idToAttributeString() {
@@ -74,8 +91,7 @@ public class Element {
         String className = classToAttributeString();
         String idName = idToAttributeString();
         String text = textToString();
-        String elementString = String.format("<%1$s%2$s%3$s>%4$s</%1$s>", tagName, className, idName,
-                text);
+        String elementString = String.format("<%1$s%2$s%3$s>%4$s</%1$s>", tagName, className, idName, text);
         return elementString;
     }
 

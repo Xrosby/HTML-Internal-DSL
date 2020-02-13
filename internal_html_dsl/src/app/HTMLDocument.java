@@ -18,21 +18,21 @@ public class HTMLDocument {
         ElementType.TITLE);
 
     public HTMLDocument() {
-        root = new Element(ElementType.HTML);
+        root = new Element(ElementType.HTML, null);
         this.currentElement = root;
     }
 
     // __________ HEADER ELEMENTS __________//
 
     public HTMLDocument head() {
-        Element head = new Element(ElementType.HEAD);
+        Element head = new Element(ElementType.HEAD, currentElement);
         this.root.addChild(head);
         this.currentElement = head;
         return this;
     }
 
     public HTMLDocument title(String title) {
-        Element titleElement = new Element(ElementType.TITLE);
+        Element titleElement = new Element(ElementType.TITLE, currentElement);
         titleElement.setText(title);
         if (this.currentElement.getType() == ElementType.HEAD) {
             this.currentElement.addChild(titleElement);
@@ -46,19 +46,19 @@ public class HTMLDocument {
     // ___________ BODY ELEMENTS _____________//
 
     public HTMLDocument body() {
-        Element body = new Element(ElementType.BODY);
+        Element body = new Element(ElementType.BODY, currentElement);
         appendChild(body);
         return this;
     }
 
     public HTMLDocument div() {
-        Element div = new Element(ElementType.DIV);
+        Element div = new Element(ElementType.DIV, currentElement);
         appendChild(div);
         return this;
     }
 
     public HTMLDocument p() {
-        Element p = new Element(ElementType.P);
+        Element p = new Element(ElementType.P, currentElement);
         appendChild(p);
         return this;
 
