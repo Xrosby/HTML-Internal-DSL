@@ -3,7 +3,6 @@ package app;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,9 +11,11 @@ public class HTMLDocument {
     private Element root;
     private Element currentElement;
     private Element previousElement;
-    private String htmlString;
-    private List<ElementType> blockedFromAttributes = Arrays.asList(ElementType.HEAD, ElementType.BODY,
-            ElementType.TITLE);
+    private String htmlString = "";
+    private List<ElementType> blockedFromAttributes = Arrays.asList(
+        ElementType.HEAD,
+        ElementType.BODY,
+        ElementType.TITLE);
 
     public HTMLDocument() {
         root = new Element(ElementType.HTML);
@@ -77,7 +78,7 @@ public class HTMLDocument {
         }
         return this;
     }
-    
+
     public HTMLDocument clazz(String className) {
         if (attributesAllowed()) {
             this.currentElement.setClazz(className);
@@ -95,8 +96,8 @@ public class HTMLDocument {
     }
 
     public HTMLDocument build() {
-        String finalString = root.traverseTree(root);
-        this.htmlString = finalString;
+        this.htmlString = root.traverseTree(root);
+        System.out.println("END OF BUILD " + this.htmlString);
         return this;
     }
 
@@ -131,7 +132,6 @@ public class HTMLDocument {
     }
 
     public void printElements() {
-        System.out.println("THIS IS THE FINAL STRING");
         System.out.println(this.htmlString);
     }
 }

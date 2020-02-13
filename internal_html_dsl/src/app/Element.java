@@ -17,14 +17,6 @@ public class Element {
         return this.type;
     }
 
-    public String getClazz() {
-        return this.clazz;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
     public ArrayList<Element> getChildren() {
         return this.children;
     }
@@ -49,21 +41,20 @@ public class Element {
     }
 
     public String traverseTree(Element fromNode) {
-        String htmlString = visitNodeAndAppend(fromNode, fromNode.getElementString());
+        String htmlString = fromNode.getElementString();
+        htmlString += visitNodeAndAppend(fromNode);
         return htmlString;
     }
 
-    private String visitNodeAndAppend(Element node, String htmlString) {
-
-        for (Element n : node.getChildren()) {
-                htmlString += n.getElementString();
-                if(n.getChildren() != null) {
-                    visitNodeAndAppend(n, htmlString);
-                }
-        
+    private String visitNodeAndAppend(Element node) {
+        StringBuilder localStringBuilder = new StringBuilder();
+        if (node.getChildren() != null) {
+            for (Element child : node.getChildren()) {
+                localStringBuilder.append(child.getElementString());
+                localStringBuilder.append(visitNodeAndAppend(child));
+            }
         }
-        System.out.println("END OF VISITNODE" + htmlString);
-        return htmlString;
+        return localStringBuilder.toString();
     }
 
     public String idToAttributeString() {
@@ -83,7 +74,8 @@ public class Element {
         String className = classToAttributeString();
         String idName = idToAttributeString();
         String text = textToString();
-        String elementString = String.format("<%1$s%2$s%3$s>%4$s</%1$s>", tagName, className, idName, text);
+        String elementString = String.format("<%1$s%2$s%3$s>%4$s</%1$s>", tagName, className, idName,
+                text);
         return elementString;
     }
 

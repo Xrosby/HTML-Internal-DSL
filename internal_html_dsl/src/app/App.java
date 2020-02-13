@@ -16,9 +16,8 @@ public class App {
                     .build();
 
         document.printElements();
-        document.writeHTMLDocument("my_test_file");
+        //document.writeHTMLDocument("my_test_file");
     }
-
 
 
    
