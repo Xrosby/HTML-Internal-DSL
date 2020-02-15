@@ -1,7 +1,6 @@
 package app;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Element {
     private ElementType type;
@@ -27,6 +26,8 @@ public class Element {
     public ArrayList<Element> getChildren() {
         return this.children;
     }
+
+
 
     public void addChild(Element child) {
         if (children == null) {
@@ -57,22 +58,12 @@ public class Element {
         StringBuilder localStringBuilder = new StringBuilder();
         if (node.getChildren() != null) {
             for (Element child : node.getChildren()) {
-                localStringBuilder.append(embed(child) + visitNodeAndAppend(child));
+                localStringBuilder.append(child.getElementString() + visitNodeAndAppend(child));
             }
         }
         return localStringBuilder.toString();
     }
 
-    public String embed(Element current) {
-        String parentString = current.getParent().getElementString();
-        String childString = current.getElementString();
-        String[] outer = parentString.split("><");
-        System.out.println("\n" + Arrays.toString(outer));
-        System.out.println("\n\n");
-        String embedded = outer[0] + ">" + childString + "<" + outer[1];
-        return embedded;
-
-    }
 
     public String idToAttributeString() {
         return (this.id != null) ? " id=" + "\"" + this.id + "\"" : "";
