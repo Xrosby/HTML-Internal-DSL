@@ -1,5 +1,7 @@
 package app;
 
 public interface IHeadElementBuilder {
-    public IHeadElementBuilder title(String titleText);
+    public IHTMLDocumentBuilder title(String titleText);
+
+
 }

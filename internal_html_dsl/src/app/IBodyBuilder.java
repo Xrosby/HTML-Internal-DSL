@@ -8,5 +8,6 @@ public interface IBodyBuilder {
     public IBodyBuilder id(String id);
     public IBodyBuilder text(String text);
     public IBodyBuilder parent();
+    public HTMLDocument build();
 
 }
