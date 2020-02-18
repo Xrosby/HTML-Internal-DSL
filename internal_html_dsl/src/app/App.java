@@ -1,13 +1,15 @@
 package app;
 
-
+import javax.swing.text.html.HTMLDocument;
 
 public class App {
 
  
     public static void main(String[] args) throws Exception {
-       IHTMLDocumentBuilder document = 
-                new HTMLDocumentBuilder()
+
+        /*
+       HTMLDocument document = 
+                new HTMLDocument()
                     .head().title("My internal dsl")
                     .body()
                         .div().clazz("container").id("my-specific-container")
@@ -18,7 +20,8 @@ public class App {
 
 
         document.generateProject("my_test_file");
-    }
+*/
+        HTMLDocument document2 = new HTMLDocument().begin().
 
 
    

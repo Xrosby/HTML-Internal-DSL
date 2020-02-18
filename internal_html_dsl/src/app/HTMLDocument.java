@@ -4,10 +4,28 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-public class HTMLDocumentBuilder implements IHTMLDocumentBuilder {
+
+public class HTMLDocument {
+
+
+    private String htmlString = "";
+
+    public HTMLDocument (String hString) {
+        this.htmlString = hString;
+    }
+
+    public HTMLDocument () {
+
+    }
+
+    public IHTMLDocumentBuilder beginProject() {
+        return new HTMLDocumentBuilder();
+    }
+
+
+
+private static class HTMLDocumentBuilder implements IHTMLDocumentBuilder, IHeadElementBuilder, IBodyBuilder, IListBuilder {
 
     private ArrayList<String> ids;
     private ArrayList<String> classes;
@@ -15,8 +33,6 @@ public class HTMLDocumentBuilder implements IHTMLDocumentBuilder {
     private Element currentElement;
     private Element previousElement;
     private String htmlString = "";
-    private List<ElementType> blockedFromAttributes = Arrays.asList(ElementType.HEAD, ElementType.BODY,
-            ElementType.TITLE);
 
     public HTMLDocumentBuilder() {
         root = new Element(ElementType.HTML, null);
@@ -31,85 +47,76 @@ public class HTMLDocumentBuilder implements IHTMLDocumentBuilder {
         Element head = new Element(ElementType.HEAD, currentElement);
         this.root.addChild(head);
         this.currentElement = head;
-        return (IHeadElementBuilder)this;
+        return (IHeadElementBuilder) this;
     }
 
     public IHeadElementBuilder title(String title) {
         Element titleElement = new Element(ElementType.TITLE, currentElement);
         titleElement.setText(title);
         this.currentElement.addChild(titleElement);
-        return (IHeadElementBuilder)this;
+        return this;
     }
 
     // ___________ BODY ELEMENTS _____________//
 
     public IListBuilder ul() {
-        return (IListBuilder)this;
+        return (IListBuilder) this;
     }
 
     public IListBuilder ol() {
-        return (IListBuilder)this;
+        return (IListBuilder) this;
     }
 
     public IListBuilder li() {
-        return (IListBuilder)this;
+        return (IListBuilder) this;
     }
 
     public IBodyBuilder body() {
         Element body = new Element(ElementType.BODY, currentElement);
         appendChild(body);
-        return (IBodyBuilder)this;
+        return  this;
     }
 
     public IBodyBuilder div() {
         Element div = new Element(ElementType.DIV, currentElement);
         appendChild(div);
-        return (IBodyBuilder)this;
+        return this;
     }
 
     public IBodyBuilder p() {
         Element p = new Element(ElementType.P, currentElement);
         appendChild(p);
-        return (IBodyBuilder)this;
+        return this;
 
     }
 
     // ________ ELEMENT ATTRIBUTES __________//
     public IBodyBuilder id(String id) {
-        if (attributesAllowed()) {
-            this.currentElement.setId(id);
-        }
+        this.currentElement.setId(id);
         this.ids.add(id);
-        return (IBodyBuilder)this;
+        return this;
     }
 
     public IBodyBuilder text(String text) {
-        if (attributesAllowed()) {
-            this.currentElement.setText(text);
-        }
-        return (IBodyBuilder)this;
+        this.currentElement.setText(text);
+
+        return this;
     }
 
     public IBodyBuilder clazz(String className) {
-        if (attributesAllowed()) {
-            this.currentElement.setClazz(className);
-        }
+        this.currentElement.setClazz(className);
         this.classes.add(className);
-        return (IBodyBuilder)this;
-    }
-
-    private boolean attributesAllowed() {
-        return !blockedFromAttributes.contains(currentElement.getType());
+        return this;
     }
 
     public IBodyBuilder parent() {
         this.currentElement = this.previousElement;
-        return (IBodyBuilder)this;
+        return  this;
     }
 
-    public IHTMLDocumentBuilder build() {
+    public HTMLDocument build() {
         this.htmlString = root.traverseTree(root);
-        return this;
+        return new HTMLDocument(this.htmlString);
     }
 
     private void appendChild(Element newChild) {
@@ -121,10 +128,6 @@ public class HTMLDocumentBuilder implements IHTMLDocumentBuilder {
     private void setState(Element newChild) {
         this.previousElement = currentElement;
         this.currentElement = newChild;
-    }
-
-    public String getHTMLString() {
-        return this.getHTMLString();
     }
 
     public boolean generateProject(String filename) {
@@ -162,7 +165,7 @@ public class HTMLDocumentBuilder implements IHTMLDocumentBuilder {
 
     private boolean writeCSSDocument(String filename) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename+ ".css"));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filename + ".css"));
             writer.write("/*This document contains all generated classes and ids*/");
             writeClasses(writer);
             writeIds(writer);
@@ -178,4 +181,5 @@ public class HTMLDocumentBuilder implements IHTMLDocumentBuilder {
         System.out.println(this.htmlString);
     }
 
+}
 }

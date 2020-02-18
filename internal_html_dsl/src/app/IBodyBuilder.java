@@ -1,6 +1,6 @@
 package app;
 
-public interface IBodyBuilder extends IHTMLDocumentBuilder {
+public interface IBodyBuilder {
     public IBodyBuilder div();
     public IBodyBuilder p();
     public IListBuilder ul();
