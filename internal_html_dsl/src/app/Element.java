@@ -48,21 +48,18 @@ public class Element {
     }
 
     public String traverseTree(Element fromNode) {
-        String htmlString = fromNode.getElementString();
-        htmlString += visitNodeAndAppend("", fromNode);
+        String htmlString = visitNodeAndAppend("", fromNode, new StringBuilder());
         return htmlString;
     }
 
-    private String visitNodeAndAppend(String prefix, Element node) {
-        StringBuilder localStringBuilder = new StringBuilder().append(node);
+    private String visitNodeAndAppend(String prefix, Element node, StringBuilder localStringBuilder) {
+       
         if (node.getChildren() != null) {
             for (Element child : node.getChildren()) {
                 String opening = prefix + child.getOpeningTag();
-                System.out.println(opening);
                 localStringBuilder.append(opening);
-                visitNodeAndAppend("\t" + prefix, child);
+                visitNodeAndAppend("\t" + prefix, child, localStringBuilder);
                 String closing = prefix + child.getClosingTag();
-                System.out.println(closing);
                 localStringBuilder.append(closing);
             }
         }

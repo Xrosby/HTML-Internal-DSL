@@ -51,6 +51,7 @@ public class HTMLDocument {
         public IHeadElementBuilder head() {
             Element head = new Element(ElementType.HEAD, currentElement);
             this.root.addChild(head);
+            this.previousElement = root;
             this.currentElement = head;
             return (IHeadElementBuilder) this;
         }
@@ -59,6 +60,7 @@ public class HTMLDocument {
             Element titleElement = new Element(ElementType.TITLE, currentElement);
             titleElement.setText(title);
             this.currentElement.addChild(titleElement);
+            this.currentElement = previousElement;
             return this;
         }
 
@@ -80,7 +82,6 @@ public class HTMLDocument {
             Element li = new Element(ElementType.LI, currentElement);
             li.setText(listText);
             currentElement.addChild(li);
-            //appendChild(li);
             return (IListBuilder) this;
         }
 
@@ -131,7 +132,9 @@ public class HTMLDocument {
         }
 
         public HTMLDocument build() {
-            this.htmlString = root.traverseTree(root);
+            this.htmlString += "<html>";
+            this.htmlString += root.traverseTree(root);
+            this.htmlString += "</html>";
             return new HTMLDocument(this.htmlString, this.ids, this.classes);
         }
 
