@@ -1,6 +1,7 @@
 package app;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ public class HTMLDocument {
     private ArrayList<String> clazzes;
     private ArrayList<String> ids;
 
-    public HTMLDocument(String hString, ArrayList<String> ids, ArrayList<String> clazzes)  {
+    public HTMLDocument(String hString, ArrayList<String> ids, ArrayList<String> clazzes) {
         this.clazzes = clazzes;
         this.ids = ids;
         this.htmlString = hString;
@@ -25,11 +26,19 @@ public class HTMLDocument {
         return new HTMLDocumentBuilder();
     }
 
-
     public boolean generateProject(String filename) {
+        this.generateProjectDir(filename);
         this.writeCSSDocument(filename);
         this.writeIHTMLDocumentBuilder(filename);
         return false;
+    }
+
+    public void testJSOUP() {
+        String html = "<head></head>";
+    }
+
+    private boolean generateProjectDir(String filename) {
+        return new File("/" + filename).mkdirs();
     }
 
     private boolean writeIHTMLDocumentBuilder(String filename) {
@@ -109,14 +118,20 @@ public class HTMLDocument {
         // ___________ BODY ELEMENTS _____________//
 
         public IListBuilder ul() {
+            Element ul = new Element(ElementType.UL, currentElement);
+            appendChild(ul);
             return (IListBuilder) this;
         }
 
         public IListBuilder ol() {
+            Element ol = new Element(ElementType.OL, currentElement);
+            appendChild(ol);
             return (IListBuilder) this;
         }
 
-        public IListBuilder li() {
+        public IListBuilder li(String listText) {
+            Element li = new Element(ElementType.LI, currentElement);
+            appendChild(li);
             return (IListBuilder) this;
         }
 
@@ -159,7 +174,11 @@ public class HTMLDocument {
         }
 
         public IBodyBuilder parent() {
+            if(this.currentElement.getType() == ElementType.LI){
+                this.currentElement = this.previousElement.getParent();
+            } else {
             this.currentElement = this.previousElement;
+            }
             return this;
         }
 
@@ -179,7 +198,7 @@ public class HTMLDocument {
             this.currentElement = newChild;
         }
 
-   
+        
 
     }
 }

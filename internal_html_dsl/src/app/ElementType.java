@@ -7,7 +7,10 @@ public enum ElementType {
     TITLE,
     HEAD,
     HTML,
-    BODY
+    BODY,
+    LI,
+    UL,
+    OL
 
 
 }

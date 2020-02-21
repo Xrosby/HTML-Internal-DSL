@@ -1,5 +1,5 @@
 package app;
 
-public interface IListBuilder {
-    public IListBuilder li();
+public interface IListBuilder extends IParent{
+    public IListBuilder li(String listText);
 }
