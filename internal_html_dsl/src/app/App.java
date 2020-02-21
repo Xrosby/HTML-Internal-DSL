@@ -1,6 +1,5 @@
 package app;
 
-
 public class App {
 
  
@@ -19,7 +18,7 @@ public class App {
                 .parent().div().clazz("some-other-container").id("some-id")
                 .build();
 
-        document2.generateProject("new-test-file");
+        document2.generateProject("My second Project");
             
             
                 
