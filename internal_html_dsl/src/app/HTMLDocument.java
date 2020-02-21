@@ -1,9 +1,5 @@
 package app;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class HTMLDocument {
@@ -18,69 +14,20 @@ public class HTMLDocument {
         this.htmlString = hString;
     }
 
+    
     public HTMLDocument() {
-
     }
+    
 
     public IHTMLDocumentBuilder beginProject() {
         return new HTMLDocumentBuilder();
     }
 
     public boolean generateProject(String filename) {
-        this.generateProjectDir(filename);
-        this.writeCSSDocument(filename);
-        this.writeIHTMLDocumentBuilder(filename);
-        return false;
+        HTMLProjectGenerator htmlPGen = new HTMLProjectGenerator();
+        return htmlPGen.generateProject(filename, this.clazzes, this.ids, this.htmlString);
     }
-
-    public void testJSOUP() {
-        String html = "<head></head>";
-    }
-
-    private boolean generateProjectDir(String filename) {
-        return new File("/" + filename).mkdirs();
-    }
-
-    private boolean writeIHTMLDocumentBuilder(String filename) {
-        try {
-            if (!filename.contains(".html")) {
-                filename += ".html";
-            }
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
-            writer.write(this.htmlString);
-            writer.close();
-        } catch (IOException e) {
-            System.out.println(e.getStackTrace());
-            return false;
-        }
-        return true;
-    }
-
-    private void writeClasses(BufferedWriter writer) throws IOException {
-        for (String clazz : this.clazzes) {
-            writer.write("\n\n." + clazz + "{\n\n}");
-        }
-    }
-
-    private void writeIds(BufferedWriter writer) throws IOException {
-        for (String id : this.ids) {
-            writer.write("\n\n#" + id + "{\n\n}");
-        }
-    }
-
-    private boolean writeCSSDocument(String filename) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(filename + ".css"));
-            writer.write("/*This document contains all generated classes and ids*/");
-            writeClasses(writer);
-            writeIds(writer);
-            writer.close();
-        } catch (IOException e) {
-            System.out.println(e.getStackTrace());
-            return false;
-        }
-        return true;
-    }
+   
 
     private static class HTMLDocumentBuilder
             implements IHTMLDocumentBuilder, IHeadElementBuilder, IBodyBuilder, IListBuilder {
@@ -131,7 +78,9 @@ public class HTMLDocument {
 
         public IListBuilder li(String listText) {
             Element li = new Element(ElementType.LI, currentElement);
-            appendChild(li);
+            li.setText(listText);
+            currentElement.addChild(li);
+            //appendChild(li);
             return (IListBuilder) this;
         }
 
@@ -163,7 +112,6 @@ public class HTMLDocument {
 
         public IBodyBuilder text(String text) {
             this.currentElement.setText(text);
-
             return this;
         }
 
@@ -186,6 +134,8 @@ public class HTMLDocument {
             this.htmlString = root.traverseTree(root);
             return new HTMLDocument(this.htmlString, this.ids, this.classes);
         }
+
+       
 
         private void appendChild(Element newChild) {
             this.currentElement.addChild(newChild);

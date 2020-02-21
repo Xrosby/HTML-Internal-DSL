@@ -1,6 +1,7 @@
 package app;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Element {
     private ElementType type;
@@ -27,8 +28,6 @@ public class Element {
         return this.children;
     }
 
-
-
     public void addChild(Element child) {
         if (children == null) {
             children = new ArrayList<>();
@@ -50,20 +49,25 @@ public class Element {
 
     public String traverseTree(Element fromNode) {
         String htmlString = fromNode.getElementString();
-        htmlString += visitNodeAndAppend(fromNode);
+        htmlString += visitNodeAndAppend("", fromNode);
         return htmlString;
     }
 
-    private String visitNodeAndAppend(Element node) {
-        StringBuilder localStringBuilder = new StringBuilder();
+    private String visitNodeAndAppend(String prefix, Element node) {
+        StringBuilder localStringBuilder = new StringBuilder().append(node);
         if (node.getChildren() != null) {
             for (Element child : node.getChildren()) {
-                localStringBuilder.append(child.getElementString() + visitNodeAndAppend(child));
+                String opening = prefix + child.getOpeningTag();
+                System.out.println(opening);
+                localStringBuilder.append(opening);
+                visitNodeAndAppend("\t" + prefix, child);
+                String closing = prefix + child.getClosingTag();
+                System.out.println(closing);
+                localStringBuilder.append(closing);
             }
         }
         return localStringBuilder.toString();
     }
-
 
     public String idToAttributeString() {
         return (this.id != null) ? " id=" + "\"" + this.id + "\"" : "";
@@ -84,6 +88,19 @@ public class Element {
         String text = textToString();
         String elementString = String.format("<%1$s%2$s%3$s>%4$s</%1$s>", tagName, className, idName, text);
         return elementString;
+    }
+
+    public String getOpeningTag() {
+        String tagName = type.name().toLowerCase();
+        String className = classToAttributeString();
+        String idName = idToAttributeString();
+        String text = textToString();
+        return "<" + tagName + className + idName + ">" + text;
+    }
+
+    public String getClosingTag() {
+        String tagName = type.name().toLowerCase();
+        return "</" + tagName + ">";
     }
 
     @Override
