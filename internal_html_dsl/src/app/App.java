@@ -18,7 +18,7 @@ public class App {
                 .parent().div().clazz("some-other-container").id("some-id")
                 .build();
 
-        document2.generateProject("My second Project");
+        document2.generateProject("my-test-project");
             
             
                 
